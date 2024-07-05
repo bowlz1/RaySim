@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
-project(my_raylib_game C)
+project(raylibSim C)
 set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_FLAGS "-O3")
 
 # Adding Raylib
 include(FetchContent)
