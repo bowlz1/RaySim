@@ -55,7 +55,7 @@ void moveBall(Ball* ball1, float dt, bool reversed) {
     float bouncyCoeff = (reversed ? 1.0f/BOUNCE : BOUNCE);
     float drag = (reversed ? -DRAG : DRAG);
 
-//    if (ball1->id%2 == 0) {
+/*//    if (ball1->id%2 == 0) {
         ball1->acc.x = .01 * cos(atan2((BOUNDS.b - GetMousePosition().y) - ball1->pos.y, GetMousePosition().x - ball1->pos.x));
         ball1->acc.y = .01 * sin(atan2((BOUNDS.b - GetMousePosition().y) - ball1->pos.y, GetMousePosition().x - ball1->pos.x));
 //    }
@@ -66,7 +66,7 @@ void moveBall(Ball* ball1, float dt, bool reversed) {
     if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
         ball1->acc.x *= -1;
         ball1->acc.y *= -1;
-    }
+    }*/
     //update vel
     ball1->vel.x = ball1->vel.x * (1 - drag * dt) + ball1->acc.x * dt;
     ball1->vel.y = ball1->vel.y * (1 - drag * dt) + ball1->acc.y * dt;
@@ -410,7 +410,7 @@ int main(void) {
 //    SetConfigFlags(FLAG_MSAA_4X_HINT);      // Enable Multi Sampling Anti Aliasing 4x (if available)
     InitWindow(BOUNDS.a, BOUNDS.b, WINDOW_TITLE);
 //    ToggleFullscreen();
-//    SetConfigFlags(FLAG_VSYNC_HINT);
+    SetConfigFlags(FLAG_VSYNC_HINT);
     SetTargetFPS(FPS);
 
     // grid attempt
@@ -522,7 +522,7 @@ int main(void) {
             Ball* ball = &((BallToIntPair *) at(linearGrid, i))->ball;
             if (ball == NULL) continue;
             // draw the ball
-            float mouseDist1 = fabsf(Vector2Distance(ball->pos, parseCoord(GetMousePosition(), BOUNDS)));
+            /*float mouseDist1 = fabsf(Vector2Distance(ball->pos, parseCoord(GetMousePosition(), BOUNDS)));
             float mouseDist2 = fabsf(Vector2Distance(ball->pos, (Vector2){BOUNDS.a - GetMousePosition().x, parseCoord(GetMousePosition(), BOUNDS).y}));
             float maxDist = sqrt(BOUNDS.a * BOUNDS.a + BOUNDS.b * BOUNDS.b)/4;
             float grad = 120.0f*(minf(mouseDist1, maxDist)/maxDist);
@@ -530,7 +530,7 @@ int main(void) {
 //            float grad = 120.0f*mouseDist/maxDist;
             float localHue = hue + fabsf(grad);
 
-            ball->color = ColorFromHSV(localHue,1.0f,1.0f);
+            ball->color = ColorFromHSV(localHue,1.0f,1.0f);*/
             if (render) {
                 DrawCircleV(parseCoord(ball->pos, BOUNDS), ball->radius, ball->color);
             }

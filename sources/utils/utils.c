@@ -4,7 +4,7 @@ const int STEPS_PER_FRAME = /*PHYSICS_FPS/FPS*/1;
 const float PHYSICS_DURATION = (1000.0 / PHYSICS_FPS);
 const float FRAME_TIME = 1000.0 / FPS;
 const Vector2 GRAVITY = (Vector2){0/1E3, -9.80665 / 1E3};
-const Vector2 R_RANGE = (Vector2){1, 5};
+const Vector2 R_RANGE = (Vector2){5, 10};
 const int R_GRID_FACTOR = R_RANGE.y*8;
 intPair BOUNDS = (intPair){1920, 960};
 

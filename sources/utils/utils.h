@@ -9,8 +9,8 @@
 #define FPS 144
 #define PHYSICS_FPS 1000.0f
 #define TIME_SPEED 1.0f
-#define BALL_COUNT 4000
-#define BOUNCE 1.0f
+#define BALL_COUNT 2000
+#define BOUNCE 0.95f
 #define DRAG 0.003f
 #define DENSITY 0.001f
 
