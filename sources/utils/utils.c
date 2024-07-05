@@ -97,19 +97,16 @@ intPair gridPosFromBall(Ball* ball, intPair bounds) {
 }
 
 void computeStartIndices(ArrayList* ballPairList, ArrayList* indicesList, intPair bounds) {
-//    printf("0\n");
     float numOfCellsX = floorf(((float) bounds.a)/(R_GRID_FACTOR));
     float numOfCellsY = floorf(((float) bounds.b)/(R_GRID_FACTOR));
     numOfCellsX = numOfCellsX < 1 ? 1 : numOfCellsX;
     numOfCellsY = numOfCellsY < 1 ? 1 : numOfCellsY;
 
     int indexCeil = max((int) numOfCellsX, (int) numOfCellsY) * max((int) numOfCellsX, (int) numOfCellsY);
-//    printf("1\n");
     //reset indices list when recalculating
     clear(indicesList);
     int m1 = -1;
     for (int i = 0; i < indexCeil; i++) push(indicesList, (genericPtr)&m1);
-//    printf("2\n");
     //assume ballPairList is sorted in ascending order by the cell hash
     int curCellHash = -1;
 
@@ -120,8 +117,6 @@ void computeStartIndices(ArrayList* ballPairList, ArrayList* indicesList, intPai
             curCellHash = buip->hash;
         }
     }
-//    printf("3\n");
-//    for (int i = 0; i < indicesList->size; i++) printf("%i %i\n", i, *(int*)at(indicesList, i));
 }
 
 void updateBallsCellHashes(ArrayList* ballPairList, intPair bounds) {

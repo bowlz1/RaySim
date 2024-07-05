@@ -1,7 +1,5 @@
 #include "utils/utils.h"
 #include "utils/tpool/pthread_pool.h"
-//#include "GLFW/glfw3.h"
-//#include "rlgl.h"
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -46,7 +44,6 @@ void printBalls(ArrayList* balls) {
 void printIndices(ArrayList* indices) {
     printf("\n[");
     for (int i = 0; i < indices->size - 1; i++) {
-//        if (*(int*)(at(indices, i)) == -1) continue;
         printf("{%i ->starts at-> %i}\n", i, *(int*)(at(indices, i)));
     }
     printf("{%i ->starts at-> %i}]", indices->size-1, *(int*)(at(indices, indices->size-1)));
@@ -164,13 +161,10 @@ void updateBallsGrid(ArrayList *balls, ArrayList* indices, float dt, intPair bou
                 continue;
             }
             int offset1 = 0;
-//            printf(" \tStart index + offset: %i", *startIndex1 + offset1);
             while (*startIndex1 + offset1 < balls->size && ((BallToIntPair*)(at(balls, *startIndex1 + offset1)))->hash == cellHash1) {//while the current ball still belongs to cell number i
                 Ball* ball1 = &(((BallToIntPair*)(at(balls, *startIndex1 + offset1)))->ball);
                 if (debugMsg) printf("\n\tBall hash: %i, id: %i, SI+off: %i", ((BallToIntPair*)(at(balls, *startIndex1 + offset1)))->hash, ball1->id, *startIndex1+offset1);
                 moveBall(ball1, dt, reversed);
-//                continue;
-//                printf(" \tMoved ball %i", ball1->id);
                 for (int dx = -1; dx <= 1; dx++) {
                     int dxx = x + dx;
                     if (dxx < 0 || dxx >= numOfCellsX) continue;
@@ -181,7 +175,6 @@ void updateBallsGrid(ArrayList *balls, ArrayList* indices, float dt, intPair bou
                         int cellHash2 = computeCellHash((intPair) {dxx, dyy});
                         int* startIndex2 = (int*)(at(indices, cellHash2));
                         if (startIndex2 == NULL || *startIndex2 < 0) continue;
-//                        printf("\nStartIndex2: %i\n", *startIndex2);
                         int offset2 = 0;
                         while (*startIndex2 + offset2 < balls->size && ((BallToIntPair*)(at(balls, *startIndex2 + offset2)))->hash == cellHash2) {//while the current ball still belongs to cell number i
                             Ball *ball2 = &(((BallToIntPair *) (at(balls, *startIndex2 + offset2)))->ball);
@@ -197,11 +190,7 @@ void updateBallsGrid(ArrayList *balls, ArrayList* indices, float dt, intPair bou
 }
 
 void* updateColumn(void* args) {
-//    printf("le palle 8\n");
-
-//    printTest(NULL);
     customArgs *cArgs = (customArgs *) args;
-//    printf("args ptr: %p\n", cArgs);
     ArrayList *balls = cArgs->balls;
     ArrayList *indices = cArgs->indices;
     float dt = cArgs->dt;
@@ -209,7 +198,6 @@ void* updateColumn(void* args) {
     int column = cArgs->column;
     bool debugMsg = cArgs->debugMsg;
     bool reversed = cArgs->reversed;
-//    free(args);
 
     int numOfCellsX = (int) floorf(((float) bounds.a) / (R_GRID_FACTOR));
     int numOfCellsY = (int) floorf(((float) bounds.b) / (R_GRID_FACTOR));
@@ -240,7 +228,6 @@ void* updateColumn(void* args) {
             continue;
         }
         int offset1 = 0;
-//            printf(" \tStart index + offset: %i", *startIndex1 + offset1);
         while (*startIndex1 + offset1 < balls->size && ((BallToIntPair *) (at(balls, *startIndex1 + offset1)))->hash ==
                                                        cellHash1) {//while the current ball still belongs to cell number i
             Ball *ball1 = &(((BallToIntPair *) (at(balls, *startIndex1 + offset1)))->ball);
@@ -249,8 +236,6 @@ void* updateColumn(void* args) {
                        ((BallToIntPair *) (at(balls, *startIndex1 + offset1)))->hash, ball1->id,
                        *startIndex1 + offset1);
             moveBall(ball1, dt, reversed);
-//                continue;
-//                printf(" \tMoved ball %i", ball1->id);
             for (int dx = -1; dx <= 1; dx++) {
                 int dxx = x + dx;
                 if (dxx < 0 || dxx >= numOfCellsX) continue;
@@ -261,7 +246,6 @@ void* updateColumn(void* args) {
                     int cellHash2 = computeCellHash((intPair) {dxx, dyy});
                     int *startIndex2 = (int *) (at(indices, cellHash2));
                     if (startIndex2 == NULL || *startIndex2 < 0) continue;
-//                        printf("\nStartIndex2: %i\n", *startIndex2);
                     int offset2 = 0;
                     while (*startIndex2 + offset2 < balls->size &&
                            ((BallToIntPair *) (at(balls, *startIndex2 + offset2)))->hash ==
@@ -278,14 +262,11 @@ void* updateColumn(void* args) {
 }
 
 void updateBallsThreaded(ArrayList *balls, ArrayList* indices, void * tpool, float dt, intPair bounds, bool debugMsg, bool reversed) {//roughly O(balls^1.5)
-//    printf("le palle 6\n");
     PollInputEvents();
     unsigned int threadCount = ((pool*) tpool)->nthreads;
     recalcBalls(balls, indices, bounds);
-//    printf("%d\n", threads->size);
     for (int a = 0; a < 3; a++) {
         for (unsigned int k = 0; k < threadCount; k++) {
-//            /*if (debugMsg) */printf("\ndispatched thread on column %d\n", 3*k+a);
             customArgs* args = (customArgs*) malloc(sizeof(customArgs));
             args->balls = balls;
             args->indices = indices;
@@ -294,19 +275,10 @@ void updateBallsThreaded(ArrayList *balls, ArrayList* indices, void * tpool, flo
             args->column = 3*k+a;
             args->debugMsg = debugMsg;
             args->reversed = reversed;
-//            pthread_create((pthread_t *) at(threads, k), NULL, updateColumn, (void*)args);
             pool_enqueue(tpool, args, 1);
         }
-/*        for (int k = 0; k < threadCount; k++) {
-//            pthread_join(*(pthread_t *) at(threads, k), NULL);
-        }*/
     }
-//    printf("le palle 7\n");
-
     pool_wait(tpool);
-//    printf("le palle 8\n");
-
-//    /*if (debugMsg) */printf("\nall threads finished\n");
 }
 
 _Noreturn void* physicsWin11(void* args) {
@@ -433,33 +405,6 @@ _Noreturn void* physicsWin11(void* args) {
         }
     }
 }
-
-/*_Noreturn void *physicsMacOS(void *args) {
-    physics_args *p_args = (physics_args *)args;
-    printf("Physics thread started\n");
-    printf("ball count: %i\n", p_args->ball_count);
-
-    float last_duration = 0;
-    float dt = PHYSICS_DURATION;
-    clock_t start_time, end_time;
-
-    while (1) {
-        start_time = clock();
-
-        dt = PHYSICS_DURATION;
-        if (last_duration > PHYSICS_DURATION) {
-            printf("exceeded duration %f : %f\n", PHYSICS_DURATION, last_duration);
-            dt = last_duration;
-        }
-
-        updateBalls(p_args->balls, dt * TIME_SPEED);
-
-        end_time = clock();
-        last_duration = (end_time - start_time) * (1000.0 / CLOCKS_PER_SEC);
-        nanosleep((const struct timespec[]){{0, 1000000L * (PHYSICS_DURATION - last_duration)}}, NULL);
-    }
-}*/
-
 int main(void) {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 //    SetConfigFlags(FLAG_MSAA_4X_HINT);      // Enable Multi Sampling Anti Aliasing 4x (if available)

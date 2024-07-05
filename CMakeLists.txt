@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(raylibSim C)
+project(Raylib_Basic_Physics_Sim C)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "-O3")
 
@@ -27,7 +27,7 @@ add_executable(${PROJECT_NAME})
 target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE})
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
-target_link_libraries(${PROJECT_NAME} PUBLIC "-static")
+#target_link_libraries(${PROJECT_NAME} PUBLIC "-static")
 
 # Setting ASSETS_PATH
 target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/") # Set the asset path macro to the absolute path on the dev machine
